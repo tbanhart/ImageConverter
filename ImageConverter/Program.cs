@@ -4,7 +4,6 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.IO;
-using ImageConverter.BrighterTools;
 
 namespace ImageConverter
 {
@@ -12,12 +11,19 @@ namespace ImageConverter
     {
         static void Main(string[] args)
         {
-            //var options = GhostScript.DeviceOptions.DefaultOptions();
+            var propFileDir = Directory.GetCurrentDirectory() + "\\properties.json";
 
-            string GSFolder = Properties.GhostscriptInstall;
-            string InputFolder = Properties.InputFolder;
-            string TempFolder = Properties.TempFolder;
-            string OutputFolder = Properties.OutputFolder;
+            //var options = GhostScript.DeviceOptions.DefaultOptions();
+            Initializer init = new Initializer(propFileDir);
+            if (init.IsInitialized == false)
+            {
+                init.UpdateRecords(GetFilePaths(), propFileDir);
+            }
+
+            Properties properties = init.ReadFile<Properties>(propFileDir);
+
+            string InputFolder = properties.Input;
+            string OutputFolder = properties.Output;
 
             //Get image location
             //location = GetPath(".pdf location");
@@ -28,9 +34,19 @@ namespace ImageConverter
             //Get all images from location
 
             //Convert each image and store in destination
-            Converter.ConvertAllInFolder(GSFolder, InputFolder, OutputFolder);
+            Converter.ConvertAllInFolder(InputFolder, OutputFolder);
 
             Console.ReadLine();
+        }
+
+        static Properties GetFilePaths()
+        {
+            var returnprop = new Properties();
+
+            returnprop.Input = GetPath("the path to where you will place .pdf's.");
+            returnprop.Output = GetPath("the path to where converted .tiff's will go.");
+
+            return returnprop;
         }
 
         static string GetPath(string prompt)
@@ -42,9 +58,10 @@ namespace ImageConverter
                 Output.PromptInput(prompt);
                 path = Input.GetInput();
             } 
-            while (Directory.Exists(path));
+            while (!Directory.Exists(path));
 
-            return path + "\\";
+            return path;
         }
+
     }
 }

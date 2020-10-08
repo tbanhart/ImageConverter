@@ -12,11 +12,12 @@ namespace ImageConverter
 {
     public class Converter
     {
-        public static void ConvertAllInFolder(string programPath, string inputPath, string outputPath)
+        public static void ConvertAllInFolder(string inputPath, string outputPath)
         {
             foreach (var file in Directory.GetFiles(inputPath))
             {
                 PdfToPng(file, outputPath);
+                File.Delete(file);
             }
         }
 

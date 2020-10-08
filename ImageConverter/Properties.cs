@@ -7,16 +7,10 @@ using System.IO;
 
 namespace ImageConverter
 {
-    public static class Properties
+    class Properties
     {
-        public static string Install { get => "C:\\Users\\T-money\\Desktop\\Install\\"; }
+        public string Input { get; set; }
 
-        public static string GhostscriptInstall { get => Install + "\\Ghostscript\\bin\\"; }
-
-        public static string TempFolder { get => Install + "Temp\\"; }
-
-        public static string InputFolder { get => Install + "Input\\"; }
-
-        public static string OutputFolder { get => Install + "Output\\"; }
+        public string Output { get; set; }
     }
 }
